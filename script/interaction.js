@@ -191,12 +191,13 @@ function formatTo24HourTime(dateObj) {
 let selectedStartTime = null;
 let selectedEndTime = null;
 
+
+
+
 $(".starttime").timepicker({
-  timeFormat: "h:mm p",
+    timeFormat: "h:mm p",
   interval: 30,
-  startTime: "06:00",
-  maxTime: "4:00pm",
-  defaultTime: "08",
+  defaultTime: "6",
   dynamic: false,
   dropdown: true,
   scrollbar: false,
@@ -239,11 +240,9 @@ $(".starttime").timepicker({
 });
 
 $(".endtime").timepicker({
-  timeFormat: "h:mm p",
+   timeFormat: "h:mm p",
   interval: 30,
-  startTime: "06:00",
-  maxTime: "4:00pm",
-  defaultTime: "16",
+  defaultTime: "18",
   dynamic: false,
   dropdown: true,
   scrollbar: false,
@@ -258,9 +257,6 @@ $(".endtime").timepicker({
       const diffMins = diffMs / (1000 * 60);
 
       if (diffMins < 60) {
-        alert("End time must be at least 1 hour after start time.");
-        $(this).val(""); // reset invalid end time
-        selectedEndTime = null;
         return;
       }
     }
