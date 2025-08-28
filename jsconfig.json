@@ -1,0 +1,6 @@
+{
+  "compilerOptions": {
+    "checkJs": true
+  },
+  "include": ["script/calendar.js", "libs/event-calendar/event-calendar.d.ts"]
+}
