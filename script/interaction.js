@@ -4,7 +4,6 @@ function getElement(id) {
 
 // Custom Dropdown
 var dropdowns = document.querySelectorAll(".custom-dropdown");
-console.log("dropdowns", dropdowns)
 if (dropdowns.length) {
   // Only one global click listener for closing dropdowns
   document.addEventListener("click", function (e) {
@@ -188,59 +187,31 @@ function formatTo24HourTime(dateObj) {
   const seconds = pad(dateObj.getSeconds());
   return `${hours}:${minutes}:${seconds}`;
 }
-let selectedStartTime = null;
-let selectedEndTime = null;
 
-
-
+// starttime
 
 $(".starttime").timepicker({
-    timeFormat: "h:mm p",
+  timeFormat: "h:mm p",
   interval: 30,
-  defaultTime: "6",
+  defaultTime: "06",
   dynamic: false,
   dropdown: true,
   scrollbar: false,
 
   change: function (time) {
-    selectedStartTime = time;
-
-    // if end time already picked, validate against it
-    if (selectedEndTime) {
-      const diffMs = selectedEndTime - selectedStartTime;
-      const diffMins = diffMs / (1000 * 60);
-
-      if (diffMins < 60) {
-        // Do not auto-correct: invalidate the end time selection instead of rejecting start
-        alert("End time must be at least 1 hour after start time.");
-        const $container = $(this).closest(".time-conatainer");
-        const $endInput = $container.length ? $container.find("input.endtime") : $("input.endtime");
-        $endInput.val(""); // reset invalid end time selection
-        selectedEndTime = null;
-        // Continue to accept the new start time and update calendar options below
-      }
-    }
-
     const fullTime = formatTo24HourTime(time);
+
     if (window?.ecCalendar) {
       window.ecCalendar.setOption("slotMinTime", fullTime);
       setTimeout(() => {
         window.refreshCalendarUI();
       }, 0);
     }
-    // Sync MVC model so TimeView doesn't overwrite with defaults
-    if (window?.mvcApp?.controllers?.time) {
-      try {
-        window.mvcApp.controllers.time.setStartTime(fullTime);
-      } catch (e) {
-        console.warn("Failed to sync start time to MVC model", e);
-      }
-    }
   },
 });
 
 $(".endtime").timepicker({
-   timeFormat: "h:mm p",
+  timeFormat: "h:mm p",
   interval: 30,
   defaultTime: "18",
   dynamic: false,
@@ -248,24 +219,10 @@ $(".endtime").timepicker({
   scrollbar: false,
 
   change: function (time) {
-
-    selectedEndTime = time;
-
-    // if start time already picked, validate against it
-    if (selectedStartTime) {
-      const diffMs = selectedEndTime - selectedStartTime;
-      const diffMins = diffMs / (1000 * 60);
-
-      if (diffMins < 60) {
-        return;
-      }
-    }
-
     const fullTime = formatTo24HourTime(time);
     if (window?.ecCalendar) {
       window.ecCalendar.setOption("slotMaxTime", fullTime);
     }
-
   },
 });
 
@@ -281,4 +238,3 @@ $(".time-conatainer img").on("click", function (e) {
     $input.focus();
   }, 10);
 });
-
